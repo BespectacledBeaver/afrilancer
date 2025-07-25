@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Star, MapPin, Clock, CheckCircle, MessageCircle, Heart } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ArrowLeft, Star, MapPin, Clock, CheckCircle, MessageCircle, Heart, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
 
 const Freelancer = () => {
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
   const { freelancerId } = useParams();
   
   const freelancerData = {
@@ -105,6 +109,41 @@ const Freelancer = () => {
   };
   
   const freelancer = freelancerData[freelancerId];
+
+  const handlePayment = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const uniqueRef = `order-${Date.now()}-${freelancerId}-afrilancer`;
+      const response = await axios.post(
+        'https://sandboxapi.bitnob.co/api/v1/checkout',
+        {
+          satoshis: 10, // or 10000 if you want to match the Vue example
+          reference: uniqueRef,
+          description: `Payment for ${freelancer.name}'s service`,
+          customerEmail: "wach7abit@gmail.com",
+          notificationEmail: "korax.dz@gmail.com",
+          callbackUrl: "https://www.bitnob.dev/api-reference/wallets",
+          successUrl: "https://www.bitnob.dev/api-reference/wallets"
+        },
+        {
+          headers: {
+            Authorization: 'Bearer sk.9d83cfaf8f47.fee6c73d45b469e2f5ef636b7',
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          }
+        }
+      );
+      // ✅ Redirect to Bitnob hosted checkout
+      window.location.href = response.data.data.previewLink;
+
+    } catch (error) {
+      console.error('❌ Checkout error:', error.response?.data || error.message);
+      alert('Payment initiation failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (!freelancer) {
     console.log(freelancerId);
@@ -283,8 +322,11 @@ const Freelancer = () => {
               </div>
               
               <div className="space-y-3">
-                <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
-                  Contact Now
+                <button 
+                  onClick={() => setShowPaymentModal(true)}
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                >
+                  Continue
                 </button>
                 <div className="flex space-x-3">
                   <button className="flex-1 border border-gray-300 text-white py-2 rounded-lg font-medium hover:bg-gray-50 transition-colors flex items-center justify-center">
@@ -301,6 +343,88 @@ const Freelancer = () => {
         </div>
       </div>
     </div>
+
+    {/* Payment Modal */}
+    <AnimatePresence>
+      {showPaymentModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-gray-100 bg-opacity-10 backdrop-blur-[2px] flex items-center justify-center p-4 z-50"
+        >
+          <motion.div
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0.95 }}
+            className="bg-white rounded-xl p-6 max-w-md w-full"
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Payment Details</h3>
+              <button
+                onClick={() => setShowPaymentModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handlePayment} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Card Number
+                </label>
+                <input
+                  type="text"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="1234 5678 9012 3456"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Expiry Date
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="MM/YY"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    CVC
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    placeholder="123"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-4 mt-4">
+                <div className="flex justify-between mb-2">
+                  <span>Service Rate</span>
+                  <span>${freelancer.hourlyRate}/hr</span>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-blue-400"
+                  disabled={loading}
+                >
+                  {loading ? 'Processing...' : 'Pay Now'}
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
     </>
   );
 };
