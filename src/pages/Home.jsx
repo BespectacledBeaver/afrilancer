@@ -1,17 +1,25 @@
 import React from "react";
-
+import mgmt from "../images/mgmt.png";
+import uiux from "../images/uiux.png";
+import ai from "../images/ai.png";
+import mktsales from "../images/mktsales.png";
+import techdev from "../images/techdev.png";
+import archit from "../images/archit.png";
+import remlear from "../images/remlear.png";
+import writetranslate from "../images/writetranslate.png";
 import Navbar from "../components/Navbar";
-import Categories from "../components/Categories";
+import Categories from "../components/Categories"; // adjust path as needed
+import { a } from "framer-motion/client";
 
 const categories = [
-  { name: "Management" },
-  { name: "UI/UX Design" },
-  { name: "Marketing & Sales" },
-  { name: "Tech & Dev" },
-  { name: "AI" },
-  { name: "Architecture" },
-  { name: "Remote learning" },
-  { name: "Writing & translation" },
+  { name: "Management", image : mgmt},
+  { name: "UI/UX Design", image : uiux },
+  { name: "Marketing & Sales", image : mktsales},
+  { name: "Tech & Dev", image : techdev},
+  { name: "AI", image :ai },
+  { name: "Architecture", image : archit },
+  { name: "Remote learning", image :remlear },
+  { name: "Writing & translation" , image :writetranslate},
 ];
 
 const Home = () => {

@@ -37,13 +37,13 @@ const Signin = () => {
     <div>
       <img src="src\images\image 8.png" alt="signin_image" className="mx-auto h-75"/>
       <form onSubmit={handleSignIn} className="max-w-md m-auto pt-10">
-        <h2 className="font-bold text-5xl text-center">Welcome Back</h2>
+        <h2 className="font-bold text-4xl text-center">Welcome Back</h2>
         
         <div className="flex flex-col py-4">
           {/* <label htmlFor="Email">Email</label> */}
           <input
             onChange={(e) => setEmail(e.target.value)}
-            className="p-4 mt-2 rounded-xl border-2 border-[#DBE0E5]"
+            className="h-13 p-4 mt-2 rounded-xl border-2 border-[#DBE0E5]"
             type="email"
             name="email"
             id="email"
@@ -54,14 +54,18 @@ const Signin = () => {
           {/* <label htmlFor="Password">Password</label> */}
           <input
             onChange={(e) => setPassword(e.target.value)}
-            className="p-4 mt-2 rounded-xl border-2 border-[#DBE0E5]"
+            className="h-13 p-4 mt-1 rounded-xl border-2 border-[#DBE0E5]"
             type="password"
             name="password"
             id="password"
             placeholder="Password"
           />
         </div>
-        <button className="w-full mt-4 text-white font-bold">Sign In</button>
+
+       <button className="w-full mt-4 text-white bg-[#0D80F2] border-2 border-[#0D80F2] font-bold rounded-lg p-3 hover:bg-white hover:text-[#0D80F2] transition-colors duration-300">
+  Sign In
+</button>
+
         <p className="text-gray-400 text-center pt-4">
           Don't have an account yet? <Link to="/signup" className="text-[#0D80F2] hover:text-gray-900"> Sign up </Link>
         </p>

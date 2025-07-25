@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../images/Logo.svg";
 import { UserAuth } from "../context/AuthContext";
 
 const Navbar = () => {
@@ -23,9 +24,9 @@ const Navbar = () => {
   <header className="w-full bg-white shadow-sm flex items-center h-20 px-8">
     {/* Logo */}
     <div className="flex items-center gap-2 flex-shrink-0">
-      <img src="/vite.svg" alt="Logo" className="h-7 w-7" />
+      <img src={logo} alt="Logo" className="h-7 w-7" />
       <span className="font-bold text-lg tracking-wide">AFRILANCER</span>
-      <span className=" text-gray-400 mt-2 mb-2 text-[12px]">
+      <span className=" text-gray-400 ml-10 mt-2 mb-2 text-[12px]">
         In association with Bitnob
         </span>
     </div>
